@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; }
+        .container { padding: 20px; }
+        .search { margin-bottom: 20px; }
+        .grid { display: flex; flex-wrap: wrap; gap: 15px; }
+        .product { border: 1px solid #ddd; padding: 10px; width: calc(25% - 15px); }
+        @media (max-width: 800px) {
+            .product { width: calc(50% - 15px); }
+        }
+        @media (max-width: 500px) {
+            .product { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Products</h1>
+        <div class="search">
+            <input type="text" id="search" placeholder="Search products...">
+            <select id="condition-filter">
+                <option value="">All Conditions</option>
+                <option value="new">New</option>
+                <option value="used">Used</option>
+            </select>
+            <select id="rarity-filter">
+                <option value="">All Rarities</option>
+                <option value="common">Common</option>
+                <option value="uncommon">Uncommon</option>
+                <option value="rare">Rare</option>
+            </select>
+        </div>
+        <div id="product-grid" class="grid"></div>
+        <h2>Shopping Cart</h2>
+        <div id="cart"></div>
+    </div>
+    <script>
+        let products = [];
+        let cart = [];
+
+        // Fetch products from productos.json
+        fetch('productos.json')
+            .then(response => response.json())
+            .then(data => {
+                products = data;
+                displayProducts(products);
+            });
+
+        function displayProducts(products) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            products.forEach(product => {
+                const div = document.createElement('div');
+                div.className = 'product';
+                div.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>Condition: ${product.condition}</p>
+                    <p>Rarity: ${product.rarity}</p>
+                    <button onclick="addToCart('${product.name}')">Add to Cart</button>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function filterProducts() {
+            const searchValue = document.getElementById('search').value.toLowerCase();
+            const condition = document.getElementById('condition-filter').value;
+            const rarity = document.getElementById('rarity-filter').value;
+
+            const filteredProducts = products.filter(product => {
+                return (!condition || product.condition === condition) &&
+                       (!rarity || product.rarity === rarity) &&
+                       (product.name.toLowerCase().includes(searchValue));
+            });
+            displayProducts(filteredProducts);
+        }
+
+        document.getElementById('search').addEventListener('input', filterProducts);
+        document.getElementById('condition-filter').addEventListener('change', filterProducts);
+        document.getElementById('rarity-filter').addEventListener('change', filterProducts);
+
+        function addToCart(productName) {
+            cart.push(productName);
+            document.getElementById('cart').innerText = 'Cart: ' + cart.join(', ');
+        }
+    </script>
+</body>
+</html>
