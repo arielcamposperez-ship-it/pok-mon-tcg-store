@@ -1,0 +1,35 @@
+.weather-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    color: #333;
+    padding: 20px;
+}
+
+.weather-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px;
+    min-width: 250px;
+    text-align: center;
+}
+
+.weather-icon {
+    width: 100px;
+    height: 100px;
+}
+
+@media (max-width: 600px) {
+    .weather-dashboard {
+        padding: 10px;
+    }
+    .weather-card {
+        margin: 5px;
+        padding: 10px;
+    }
+}
